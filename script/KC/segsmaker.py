@@ -25,7 +25,7 @@ iRON['PYTHONWARNINGS'] = 'ignore'
 def Trashing():
     run = lambda cmd: subprocess.run(shlex.split(cmd), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    dirs1 = ['A1111', 'Forge', 'ReForge', 'Forge-Classic', 'Forge-Neo','ComfyUI', 'SwarmUI']
+    dirs1 = ['A1111', 'Forge', 'ReForge', 'ReForge-old', 'Forge-Classic', 'Forge-Neo', 'ComfyUI', 'SwarmUI']
     dirs2 = ['ckpt', 'lora', 'controlnet', 'svd', 'z123']
 
     paths = [Path(HOMEPATH) / name for name in dirs1] + [Path(TEMPPATH) / name for name in dirs2]
@@ -62,7 +62,7 @@ def ZROK_enable(token):
 def webui_launch(launch_args, skip_comfyui_check, ngrok_token=None, zrok_token=None):
     ui = json.load((Path(HOMEPATH) / 'gutris1/marking.json').open('r')).get('ui')
 
-    if ui in ['A1111', 'Forge', 'ReForge', 'Forge-Classic', 'Forge-Neo']:
+    if ui in ['A1111', 'Forge', 'ReForge', 'ReForge-old', 'Forge-Classic', 'Forge-Neo']:
         port = 7860
         SyS(f"echo -n {int(time.time()) + 3600} > {CWD / 'asd/pinggytimer.txt'}")
         launch_args += ' --enable-insecure-extension-access --disable-console-progressbars --theme dark'
