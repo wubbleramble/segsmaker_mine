@@ -10,9 +10,9 @@ import sys
 import os
 import re
 
-SyS = get_ipython().system
 CD = os.chdir
 iRON = os.environ
+SyS = get_ipython().system
 
 REPO = {
     'A1111': 'https://github.com/gutris1/A1111',
@@ -33,8 +33,7 @@ def getENV():
         'Kaggle': ('/kaggle', '/kaggle/working', 'KAGGLE_DATA_PROXY_TOKEN')
     }
     for name, (base, home, var) in env.items():
-        if var in iRON:
-            return name, base, home
+        if var in iRON: return name, base, home
     return None, None, None
 
 def getArgs():
@@ -71,6 +70,8 @@ def getArgs():
     return selected_ui, arg2, arg3
 
 def getPython():
+    global PYV
+
     cs = {
         'v': '3.13.12',
         'url': 'https://huggingface.co/gutris1/webui/resolve/main/env/KC-ComfyUI-SwarmUI-Python31312-Torch2100-cu130.tar.lz4'
@@ -103,6 +104,7 @@ def getPython():
 
     cfg = c.get(webui, c['default'])
     v = '.'.join(cfg['v'].split('.')[:2])
+    PYV = v
 
     BIN = str(PY / 'bin')
     PKG = str(PY / f'lib/python{v}/site-packages')
@@ -447,7 +449,14 @@ def notebook_scripts():
 
     [SyS(y) for x, y in z if not Path(x).exists()]
 
-    j = {'ENVNAME': ENVNAME, 'HOMEPATH': HOME, 'TEMPPATH': TMP, 'BASEPATH': Path(ENVBASE)}
+    j = {
+        'ENVNAME': ENVNAME,
+        'HOMEPATH': HOME,
+        'TEMPPATH': TMP,
+        'BASEPATH': Path(ENVBASE),
+        'PYV': PYV
+    }
+
     text = '\n'.join(f"{k} = '{v}'" for k, v in j.items())
     Path(KANDANG).write_text(text)
 
@@ -458,6 +467,7 @@ def notebook_scripts():
     for scripts in [nenen, melon, KANDANG, MRK]: get_ipython().run_line_magic('run', str(scripts))
 
 ENVNAME, ENVBASE, ENVHOME = getENV()
+PYV = None
 
 if not ENVNAME:
     print('You are not in Kaggle or Google Colab.\nExiting.')
