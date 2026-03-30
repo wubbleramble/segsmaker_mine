@@ -88,7 +88,7 @@ def getPython():
 
         'ReForge': {
             'v': '3.12.13',
-            'url': 'https://huggingface.co/gutris1/webui/resolve/main/env/KC-ReForge-Python31213-Torch2100-cu130.tar.lz4'
+            'url': 'https://huggingface.co/gutris1/webui/resolve/main/env/KC-ReForge-Python31213-Torch2110-cu130.tar.lz4'
         },
 
         'Forge-Classic': {
