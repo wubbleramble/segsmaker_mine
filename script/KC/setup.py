@@ -10,21 +10,22 @@ import sys
 import os
 import re
 
-SyS = get_ipython().system
 CD = os.chdir
 iRON = os.environ
+SyS = get_ipython().system
 
 REPO = {
     'A1111': 'https://github.com/gutris1/A1111',
     'Forge': 'https://github.com/lllyasviel/stable-diffusion-webui-forge Forge',
-    'ReForge': '-b main-old https://github.com/Panchovix/stable-diffusion-webui-reForge ReForge',
+    'ReForge': 'https://github.com/Panchovix/stable-diffusion-webui-reForge ReForge',
+    'ReForge-old': '-b main-old https://github.com/Panchovix/stable-diffusion-webui-reForge ReForge-old',
     'Forge-Classic': '-b classic https://github.com/Haoming02/sd-webui-forge-classic Forge-Classic',
     'Forge-Neo': '-b neo https://github.com/Haoming02/sd-webui-forge-classic Forge-Neo',
     'ComfyUI': 'https://github.com/comfyanonymous/ComfyUI',
     'SwarmUI': 'https://github.com/mcmonkeyprojects/SwarmUI'
 }
 
-WEBUI_LIST = ['A1111', 'Forge', 'ReForge', 'Forge-Classic', 'Forge-Neo', 'ComfyUI', 'SwarmUI']
+WEBUI_LIST = ['A1111', 'Forge', 'ReForge', 'ReForge-old', 'Forge-Classic', 'Forge-Neo', 'ComfyUI', 'SwarmUI']
 
 def getENV():
     env = {
@@ -32,13 +33,12 @@ def getENV():
         'Kaggle': ('/kaggle', '/kaggle/working', 'KAGGLE_DATA_PROXY_TOKEN')
     }
     for name, (base, home, var) in env.items():
-        if var in iRON:
-            return name, base, home
+        if var in iRON: return name, base, home
     return None, None, None
 
 def getArgs():
     parser = argparse.ArgumentParser(description='WebUI Installer Script for Kaggle and Google Colab')
-    parser.add_argument('--webui', required=True, help='available webui: A1111, Forge, ReForge, Forge-Classic, Forge-Neo, ComfyUI, SwarmUI')
+    parser.add_argument('--webui', required=True, help='available webui: A1111, Forge, ReForge, ReForge-old, Forge-Classic, Forge-Neo, ComfyUI, SwarmUI')
     parser.add_argument('--civitai_key', required=True, help='your CivitAI API key')
     parser.add_argument('--hf_read_token', default=None, help='your Huggingface READ Token (optional)')
 
@@ -70,6 +70,8 @@ def getArgs():
     return selected_ui, arg2, arg3
 
 def getPython():
+    global PYV
+
     cs = {
         'v': '3.13.12',
         'url': 'https://huggingface.co/gutris1/webui/resolve/main/env/KC-ComfyUI-SwarmUI-Python31312-Torch2100-cu130.tar.lz4'
@@ -84,10 +86,16 @@ def getPython():
         'ComfyUI': cs,
         'SwarmUI': cs,
 
+        'ReForge': {
+            'v': '3.12.13',
+            'url': 'https://huggingface.co/gutris1/webui/resolve/main/env/KC-ReForge-Python31213-Torch2110-cu130.tar.lz4'
+        },
+
         'Forge-Classic': {
             'v': '3.11.13',
             'url': 'https://huggingface.co/gutris1/webui/resolve/main/env/KC-FC-Python311-Torch260-cu124.tar.lz4'
         },
+
         'Forge-Neo': {
             'v': '3.13.12',
             'url': 'https://huggingface.co/gutris1/webui/resolve/main/env/KC-FN-Python3-13-12-Torch2100-cu130.tar.lz4'
@@ -96,6 +104,7 @@ def getPython():
 
     cfg = c.get(webui, c['default'])
     v = '.'.join(cfg['v'].split('.')[:2])
+    PYV = v
 
     BIN = str(PY / 'bin')
     PKG = str(PY / f'lib/python{v}/site-packages')
@@ -203,6 +212,20 @@ def sym_link(U, M):
         },
 
         'ReForge': {
+            'sym': [
+                f"rm -rf {M / 'Stable-diffusion/tmp_ckpt'} {M / 'Lora/tmp_lora'} {M / 'ControlNet'}",
+                f"rm -rf {M / 'svd'} {M / 'z123'} {TMP}/*"
+            ],
+            'links': [
+                (TMP / 'ckpt', M / 'Stable-diffusion/tmp_ckpt'),
+                (TMP / 'lora', M / 'Lora/tmp_lora'),
+                (TMP / 'controlnet', M / 'ControlNet'),
+                (TMP / 'z123', M / 'z123'),
+                (TMP / 'svd', M / 'svd')
+            ]
+        },
+
+        'ReForge-old': {
             'sym': [
                 f"rm -rf {M / 'Stable-diffusion/tmp_ckpt'} {M / 'Lora/tmp_lora'} {M / 'ControlNet'}",
                 f"rm -rf {M / 'svd'} {M / 'z123'} {TMP}/*"
@@ -388,6 +411,7 @@ def webui_installer():
         'SwarmUI': 'master',
         'Forge': 'main',
         'ReForge': 'main',
+        'ReForge-old': 'main-old',
         'Forge-Classic': 'classic',
         'Forge-Neo': 'neo',
     }
@@ -425,7 +449,14 @@ def notebook_scripts():
 
     [SyS(y) for x, y in z if not Path(x).exists()]
 
-    j = {'ENVNAME': ENVNAME, 'HOMEPATH': HOME, 'TEMPPATH': TMP, 'BASEPATH': Path(ENVBASE)}
+    j = {
+        'ENVNAME': ENVNAME,
+        'HOMEPATH': HOME,
+        'TEMPPATH': TMP,
+        'BASEPATH': Path(ENVBASE),
+        'PYV': PYV
+    }
+
     text = '\n'.join(f"{k} = '{v}'" for k, v in j.items())
     Path(KANDANG).write_text(text)
 
@@ -436,6 +467,7 @@ def notebook_scripts():
     for scripts in [nenen, melon, KANDANG, MRK]: get_ipython().run_line_magic('run', str(scripts))
 
 ENVNAME, ENVBASE, ENVHOME = getENV()
+PYV = None
 
 if not ENVNAME:
     print('You are not in Kaggle or Google Colab.\nExiting.')

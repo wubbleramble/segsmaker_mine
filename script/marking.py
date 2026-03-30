@@ -40,6 +40,7 @@ def setWebUIVAR(ui):
         'A1111': default,
         'Forge': default,
         'ReForge': default,
+        'ReForge-old': default,
         'Forge-Classic': default,
         'Forge-Neo': default,
         'ComfyUI': ('custom_nodes', 'embeddings', 'vae', 'checkpoints', 'loras', 'upscale_models'),
@@ -87,7 +88,7 @@ if marked.exists():
     WebUI, Models, WebUI_Output, Extensions, Embeddings, VAE, CKPT, LORA, Upscalers = setWebUIVAR(ui)
 
     Controlnet_Widget = WebUI / 'asd/controlnet.py' if WebUI else None
-    Forge_SVD = TMP / 'svd' if ui in ['Forge', 'ReForge'] else None
+    Forge_SVD = TMP / 'svd' if ui in ['Forge', 'ReForge', 'ReForge-old'] else None
     UNET = TMP / 'unet' if ui in ['Forge', 'ComfyUI', 'SwarmUI'] else None
     CLIP = TMP / 'clip' if ui in ['Forge', 'ComfyUI', 'SwarmUI'] else None
     TMP_CKPT = TMP / 'ckpt'
