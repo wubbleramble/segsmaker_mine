@@ -74,7 +74,7 @@ def webui_launch(launch_args, skip_comfyui_check, ngrok_token=None, zrok_token=N
             SyS('pip uninstall -qy transformers')
             (CWD / 'FT.txt').write_text('blyat')
 
-        if ui == 'Forge-Neo':
+        if ui in ['ReForge', 'Forge-Neo']:
             iRON['MPLBACKEND'] = 'agg'
 
         iRON.setdefault('IIB_ACCESS_CONTROL', 'disable')
