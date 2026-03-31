@@ -17,7 +17,7 @@ SyS = get_ipython().system
 REPO = {
     'A1111': 'https://github.com/gutris1/A1111',
     'Forge': 'https://github.com/lllyasviel/stable-diffusion-webui-forge Forge',
-    'ReForge': 'https://github.com/Panchovix/stable-diffusion-webui-reForge ReForge',
+    'ReForge': '-b newmain_newforge https://github.com/Panchovix/stable-diffusion-webui-reForge ReForge',,
     'ReForge-old': '-b main-old https://github.com/Panchovix/stable-diffusion-webui-reForge ReForge-old',
     'Forge-Classic': '-b classic https://github.com/Haoming02/sd-webui-forge-classic Forge-Classic',
     'Forge-Neo': '-b neo https://github.com/Haoming02/sd-webui-forge-classic Forge-Neo',
@@ -411,7 +411,7 @@ def webui_installer():
         'ComfyUI': 'master',
         'SwarmUI': 'master',
         'Forge': 'main',
-        'ReForge': 'main',
+        'ReForge': 'newmain_newforge',
         'ReForge-old': 'main-old',
         'Forge-Classic': 'classic',
         'Forge-Neo': 'neo',
