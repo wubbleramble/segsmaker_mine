@@ -421,15 +421,15 @@ def webui_installer():
     ui = (json.load(MARKED.open('r')) if MARKED.exists() else {}).get('ui')
     WEBUI = HOME / ui if ui else None
 
-    if WEBUI is not None and WEBUI.exists():  # ← indented inside the function
+    if WEBUI is not None and WEBUI.exists():
         git_dir = WEBUI / '.git'
         if git_dir.exists():
             CD(WEBUI)
             with output:
                 output.clear_output(wait=True)
                 if ui in branchs:
-                   SyS(f'git fetch origin {branchs[ui]}')
-                   SyS(f'git reset --hard origin/{branchs[ui]}')
+                    SyS(f'git fetch origin {branchs[ui]}')
+                    SyS(f'git reset --hard origin/{branchs[ui]}')
             with loading: loading.clear_output()
     else:
         try:
