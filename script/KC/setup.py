@@ -405,6 +405,7 @@ def webui_selection(ui):
             CD(HOME)
 
 def webui_installer():
+    global WEBUI
     branchs = {
         'A1111': 'master',
         'ComfyUI': 'master',
