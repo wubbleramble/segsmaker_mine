@@ -428,8 +428,8 @@ def webui_installer():
             with output:
                 output.clear_output(wait=True)
                 if ui in branchs:
-                SyS(f'git fetch origin {branchs[ui]}')
-                SyS(f'git reset --hard origin/{branchs[ui]}')
+                   SyS(f'git fetch origin {branchs[ui]}')
+                   SyS(f'git reset --hard origin/{branchs[ui]}')
             with loading: loading.clear_output()
     else:
         try:
@@ -487,8 +487,8 @@ IMG = 'https://github.com/wubbleramble/segsmaker_mine/raw/main/script/loading.pn
 HOME = Path(ENVHOME)
 TMP = Path(ENVBASE) / 'temp'
 
-PY = Path('/WUBBLERAMBLE')
-SRC = HOME / 'wubbleramble'
+PY = Path('/GUTRIS1')
+SRC = HOME / 'gutris1'
 MRK = SRC / 'marking.py'
 KEY = SRC / 'api-key.json'
 MARKED = SRC / 'marking.json'
