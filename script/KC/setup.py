@@ -396,8 +396,11 @@ def webui_selection(ui):
         say(f'<b>【{{red}} Installing {WEBUI.name}{{d}} 】{{red}}</b>')
         clone(repo)
 
-        webui_installation(ui, WEBUI)
+        if ui == 'ReForge':
+            CD(WEBUI)
+            SyS('pip install -r requirements_versions.txt --quiet')
 
+        webui_installation(ui, WEBUI)
         with loading:
             loading.clear_output(wait=True)
             say('<br><b>【{red} Done{d} 】{red}</b>')
