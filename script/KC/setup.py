@@ -218,11 +218,8 @@ def _setup():
         _reqs(WEBUI, M)
 
         for e in [
-            f'https://huggingface.co/gutris1/webui/resolve/main/misc/embeddingsXL.zip {WEBUI}',
             f'https://huggingface.co/madebyollin/sdxl-vae-fp16-fix/resolve/main/sdxl.vae.safetensors {V} sdxl_vae.safetensors'
         ]: download(e)
-
-        SyS(f"unzip -qo {WEBUI / 'embeddingsXL.zip'} -d {E} && rm {WEBUI / 'embeddingsXL.zip'}")
 
         if ui != 'SwarmUI':
             CD(EXT)
